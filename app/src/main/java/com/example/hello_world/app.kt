@@ -13,5 +13,9 @@ fun App() {
 	println("Json: $data")
 	val response = decodeFromString<UserProfileEntities>(data)
 	println("User: $response")
+
+	println("Working Directory = ${System.getProperty("user.dir")}")
+	println(BuildConfig.SUPABASE_URL_KEY)
+	println(BuildConfig.SUPABASE_ANON_KEY)
 	LoginPage()
 }

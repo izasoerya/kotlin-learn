@@ -1,15 +1,31 @@
+import java.util.Properties
+
 plugins {
 	id("com.android.application")
 	id("org.jetbrains.kotlin.android")
 	id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+
 	kotlin("plugin.serialization") version "2.1.0"
 }
 
 android {
 	namespace = "com.example.hello_world"
 	compileSdk = 34
-
+	android.buildFeatures.buildConfig = true
 	defaultConfig {
+		val localProperties = Properties()
+		val localFile = rootProject.file("local.properties")
+		if (localFile.exists()) {
+			localFile.inputStream().use { localProperties.load(it) }
+		}
+
+		// Add fields from local.properties to BuildConfig
+		localProperties.forEach { (key, value) ->
+			if (key != "sdk.dir") {
+				buildConfigField("String", key.toString(), "\"${value}\"")
+			}
+		}
+
 		applicationId = "com.example.hello_world"
 		minSdk = 26
 		targetSdk = 34
@@ -70,4 +86,5 @@ dependencies {
 	debugImplementation("androidx.compose.ui:ui-test-manifest")
 
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
 }
